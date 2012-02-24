@@ -10,7 +10,7 @@
 	}
 	, "main": "index.js"
 	, "dependencies": {
-		"node-syslog": "1.1.1"
+		"node-syslog": "1.1.2"
 	}
 	, "devDependencies": {
 		"log4js": "0.4"
