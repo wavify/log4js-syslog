@@ -8,9 +8,9 @@ process.stdout.write("==========================================================
 
 //Symlink default strategies
 var appender_name = 'syslog';
-var modules_path_rel_to_appenders = '../node_modules';
-var appenders_path = '/log4js/lib/appenders/strategies';
+var modules_path_rel_to_node_modules = '../';
+var appenders_path = 'log4js/lib/appenders/';
 
-fs.symlinkSync('./index.js', modules_path_rel_to_appenders + appenders_path+'/' + appender_name + '.js');
+fs.symlinkSync(fs.realpathSync('./index.js'), modules_path_rel_to_node_modules + appenders_path + appender_name + '.js');
 
 process.stdout.write("Log4js-syslog Install: Finished.\n")
