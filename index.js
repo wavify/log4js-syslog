@@ -42,17 +42,19 @@ function open(config) {
 
 	// no need to check if it's already open, the lib does that
 	syslog.init(name, optsVal, facility);
+
+	return syslogAppender();
 }
 
 function syslogAppender (config) {
-	open(config);
+	//open(config);
   return function(loggingEvent) {
 		var level = getSyslogLevel(loggingEvent.level)
 			, data = loggingEvent.data
 			, layout
 
 	  if(level) {
-	  	layout = config && config.layout ? config.layout : log4js.layouts.basicLayout; 
+	  	layout = config && config.layout ? config.layout : log4js.layouts.basicLayout;
 			data = layout(loggingEvent);
 
 		  syslog.log(level, data);

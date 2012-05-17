@@ -9,6 +9,9 @@
 		, "url": "https://github.com/polotek/log4js-syslog.git"
 	}
 	, "main": "index.js"
+	"scripts": {
+		"install": "node install.js"
+	},
 	, "dependencies": {
 		"node-syslog": "1.1.2"
 	}
