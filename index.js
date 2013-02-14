@@ -30,7 +30,9 @@ function open(config) {
 
 	var name = (config.ident || config.name || 'node-syslog') + ''
 		, optsVal = (syslog.LOG_PID | syslog.LOG_CONS | syslog.LOG_ODELAY)
-		, facility = syslog.LOG_LOCAL0;
+		, facility = syslog.LOG_LOCAL0
+		, layout = config.layout && log4js.layouts.layout(config.layout.type, config.layout)
+				|| log4js.layouts.patternLayout("%p %c - %m%n");
 
 	if(config.flags) {
 		optsVal = getOptions(config.flags);
@@ -43,10 +45,10 @@ function open(config) {
 	// no need to check if it's already open, the lib does that
 	syslog.init(name, optsVal, facility);
 
-	return syslogAppender();
+	return syslogAppender(layout);
 }
 
-function syslogAppender (config) {
+function syslogAppender (layout) {
 	//open(config);
   return function(loggingEvent) {
 		var level = getSyslogLevel(loggingEvent.level)
@@ -54,7 +56,6 @@ function syslogAppender (config) {
 			, layout
 
 	  if(level) {
-	  	layout = config && config.layout ? config.layout : log4js.layouts.basicLayout;
 			data = layout(loggingEvent);
 
 		  syslog.log(level, data);
