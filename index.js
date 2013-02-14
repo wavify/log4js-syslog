@@ -52,8 +52,7 @@ function syslogAppender (layout) {
 	//open(config);
   return function(loggingEvent) {
 		var level = getSyslogLevel(loggingEvent.level)
-			, data = loggingEvent.data
-			, layout
+			, data = loggingEvent.data;
 
 	  if(level) {
 			data = layout(loggingEvent);
