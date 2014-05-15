@@ -13,10 +13,10 @@
 		"install": "node install.js"
 	}
 	, "dependencies": {
-		"node-syslog": "1.1.2"
+		"node-syslog": ">= 1.1.5"
 	}
 	, "devDependencies": {
 		"log4js": "0.4"
 	}
-	, "engines": { "node": ">= 0.4" }
+	, "engines": { "node": ">= 0.8.0" }
 }
