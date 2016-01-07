@@ -13,10 +13,10 @@
 		"install": "node install.js"
 	}
 	, "dependencies": {
-		"node-syslog": "~ 1.1.7"
+		"node-syslog": "git://github.com/achingbrain/node-syslog.git#a88dbb6"
 	}
 	, "devDependencies": {
-		"log4js": "0.4"
+		"log4js": "git://github.com/wavify/log4js-node.git#nodev5"
 	}
 	, "engines": { "node": ">= 0.8.0" }
 }

@@ -1,5 +1,6 @@
-var log4js = require('log4js')
-	, syslog = require('node-syslog');
+var log4js = require('log4js'),
+ layouts = log4js.layouts,
+  syslog = require('node-syslog');
 
 
 var levels = {}
@@ -12,53 +13,56 @@ levels[log4js.levels.ERROR] = syslog.LOG_ERR;
 levels[log4js.levels.FATAL] = syslog.LOG_CRIT;
 
 function getOptions(flags) {
-	var opts = 0;
-	if(Array.isArray(flags)) {
-		for(var i = 0, len = flags.length; i < len; i++) {
-			opts = opts | flags[i];
-		}
-	}
-	return opts;
+  var opts = 0;
+  if (Array.isArray(flags)) {
+    for (var i = 0, len = flags.length; i < len; i++) {
+      opts = opts | flags[i];
+    }
+  }
+  return opts;
 }
 
 function getSyslogLevel(level) {
-	return level && levels[level] ? levels[level] : null;
+  return level && levels[level] ? levels[level] : null;
 }
 
 function open(config) {
-	config = config || {}
+  config = config || {}
 
-	var name = (config.ident || config.name || 'node-syslog') + ''
-		, optsVal = (syslog.LOG_PID | syslog.LOG_CONS | syslog.LOG_ODELAY)
-		, facility = syslog.LOG_LOCAL0;
+  var name = (config.ident || config.name || 'node-syslog') + '',
+    optsVal = (syslog.LOG_PID | syslog.LOG_CONS | syslog.LOG_ODELAY),
+    facility = syslog.LOG_LOCAL0,
+    layout;
 
-	if(config.flags) {
-		optsVal = getOptions(config.flags);
-	}
+  if (config.flags) {
+    optsVal = getOptions(config.flags);
+  }
 
-	if(config.facility && syslog[config.facility]) {
-		facility = syslog[config.facility];
-	}
+  if (config.facility && syslog[config.facility]) {
+    facility = syslog[config.facility];
+  }
 
-	// no need to check if it's already open, the lib does that
-	syslog.init(name, optsVal, facility);
+  if (config.layout) {
+    layout = layouts.layout(config.layout.type, config.layout);
+  }
 
-	return syslogAppender();
+  // no need to check if it's already open, the lib does that
+  syslog.init(name, optsVal, facility);
+
+  return syslogAppender(layout);
 }
 
-function syslogAppender (config) {
-	//open(config);
+function syslogAppender(layout) {
+  layout = layout || layouts.colouredLayout;
   return function(loggingEvent) {
-		var level = getSyslogLevel(loggingEvent.level)
-			, data = loggingEvent.data
-			, layout
+    var level = getSyslogLevel(loggingEvent.level),
+    data = loggingEvent.data;
 
-	  if(level) {
-	  	layout = config && config.layout ? config.layout : log4js.layouts.basicLayout;
-			data = layout(loggingEvent);
+    if (level) {
+      data = layout(loggingEvent);
 
-		  syslog.log(level, data);
-		}
+      syslog.log(level, data);
+    }
   };
 }
 
